@@ -1,0 +1,203 @@
+generator client {
+  provider = "prisma-client-js"
+  engineType = "binary"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  CORPER
+  DOCTOR
+  COORDINATOR
+  ABUJA_ADMIN
+  DG
+  SYSTEM
+}
+
+enum MctStatus {
+  CREATED
+  UNDER_REVIEW
+  REVIEW_REQUIRED
+  ESCALATED
+  APPROVED
+  REJECTED
+  CLOSED
+}
+
+enum DecisionOutcome {
+  AUTO_APPROVE
+  REVIEW_REQUIRED
+  ESCALATE
+  AUTO_REJECT
+  APPROVED
+  REJECTED
+}
+
+enum HospitalTier {
+  TIER_1
+  TIER_2
+}
+
+enum EventType {
+  LOGIN_SUCCESS
+  LOGIN_FAILED
+  MCT_CREATED
+  MCT_TRANSITION_ATTEMPT
+  MCT_TRANSITION_SUCCESS
+  MCT_TRANSITION_FAILED
+  REPORT_CREATED
+  REPORT_UPDATED
+  VERIFICATION_CODE_GENERATED
+  VERIFICATION_CODE_VALIDATED
+  VERIFICATION_CODE_FAILED
+  VERIFICATION_CODE_EXTENDED
+  DECISION_GENERATED
+  DECISION_OVERRIDDEN
+  DECISION_FINALIZED
+  ADMIN_ACTION
+}
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String
+  role         Role
+  firstName    String?
+  lastName     String?
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  deletedAt    DateTime?
+
+  corper      Corper?
+  doctor      Doctor?
+  decisions   CaseDecision[] @relation("DecisionActor")
+  auditEvents AuditLog[]     @relation("AuditActor")
+}
+
+model Corper {
+  id             String   @id @default(uuid())
+  userId         String   @unique
+  callUpNumber   String   @unique
+  nin            String?  @unique
+  bvn            String?  @unique
+  phone          String?
+  postedState    String?
+  currentState   String?
+  isMobilized    Boolean  @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  deletedAt      DateTime?
+
+  user  User      @relation(fields: [userId], references: [id])
+  cases MctCase[]
+}
+
+model Hospital {
+  id                 String       @id @default(uuid())
+  name               String
+  state              String
+  tier               HospitalTier
+  approvedRegistryId String       @unique
+  isActive           Boolean      @default(true)
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
+  deletedAt          DateTime?
+
+  doctors Doctor[]
+  cases   MctCase[]
+}
+
+model Doctor {
+  id             String   @id @default(uuid())
+  userId         String   @unique
+  hospitalId     String
+  mdcnNumber     String   @unique
+  specialization String?
+  isActive       Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  deletedAt      DateTime?
+
+  user     User      @relation(fields: [userId], references: [id])
+  hospital Hospital  @relation(fields: [hospitalId], references: [id])
+  cases    MctCase[]
+}
+
+model MctCase {
+  id              String    @id @default(uuid())
+  corperId        String
+  hospitalId      String?
+  doctorId        String?
+  status          MctStatus @default(CREATED)
+  riskScore       Int       @default(0)
+  riskBreakdown   Json?
+  referralTag     Boolean   @default(false)
+  identityMatch   String?
+  submittedAt     DateTime?
+  reviewedAt      DateTime?
+  closedAt        DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  deletedAt       DateTime?
+
+  corper            Corper              @relation(fields: [corperId], references: [id])
+  hospital          Hospital?           @relation(fields: [hospitalId], references: [id])
+  doctor            Doctor?             @relation(fields: [doctorId], references: [id])
+  verificationCodes VerificationCode[]
+  decisions         CaseDecision[]
+  auditEvents       AuditLog[]
+}
+
+model VerificationCode {
+  id             String   @id @default(uuid())
+  mctCaseId      String
+  corperId       String
+  hospitalId     String
+  doctorId       String
+  codeValue      String   @unique
+  expiresAt      DateTime
+  usedAt         DateTime?
+  failedAttempts Int      @default(0)
+  extensionCount Int      @default(0)
+  extendedById   String?
+  extensionReason String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  deletedAt      DateTime?
+
+  mctCase MctCase @relation(fields: [mctCaseId], references: [id])
+}
+
+model CaseDecision {
+  id            String          @id @default(uuid())
+  mctCaseId     String
+  outcome       DecisionOutcome
+  riskScore     Int
+  riskBreakdown Json?
+  reasonText    String?
+  decidedById   String?
+  isOverride    Boolean         @default(false)
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+
+  mctCase   MctCase @relation(fields: [mctCaseId], references: [id])
+  decidedBy User?   @relation("DecisionActor", fields: [decidedById], references: [id])
+}
+
+model AuditLog {
+  id             String    @id @default(uuid())
+  eventType      EventType
+  actorId        String?
+  actorRole      Role?
+  mctCaseId      String?
+  targetId       String?
+  payloadSummary Json?
+  sourceIp       String?
+  createdAt      DateTime  @default(now())
+
+  actor   User?    @relation("AuditActor", fields: [actorId], references: [id])
+  mctCase MctCase? @relation(fields: [mctCaseId], references: [id])
+}
