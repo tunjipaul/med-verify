@@ -1,0 +1,14 @@
+
+
+https://x.com/hackSultan/status/2046582420929917260?s=20
+
+https://x.com/hackSultan/status/2046269993898181081?s=20
+
+Seeded users and password:
+
+- Password for all: `Password123!`
+- `admin@medverify.local` (`ABUJA_ADMIN`)
+- `dg@medverify.local` (`DG`)
+- `coordinator@medverify.local` (`COORDINATOR`)
+- `doctor@medverify.local` (`DOCTOR`)
+- `corper@medverify.local` (`CORPER`)
