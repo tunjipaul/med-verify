@@ -37,10 +37,12 @@ describe("MCT cases integration", () => {
         lastName: "SuiteCorper",
       },
     });
+    const suiteNinSuffix = String(Date.now()).padStart(10, "0").slice(-10);
     await prisma.corper.create({
       data: {
         userId: suiteUser.id,
         callUpNumber: `NYSC-MCT-${Date.now()}`,
+        nin: `9${suiteNinSuffix}`,
         postedState: "FCT",
         currentState: "FCT",
         isMobilized: true,
@@ -78,10 +80,12 @@ describe("MCT cases integration", () => {
         lastName: "Corper",
       },
     });
+    const foreignNinSuffix = String(Date.now() + 1).padStart(10, "0").slice(-10);
     const foreignCorper = await prisma.corper.create({
       data: {
         userId: foreignUser.id,
         callUpNumber: `NYSC-OTHER-${Date.now()}`,
+        nin: `9${foreignNinSuffix}`,
         postedState: "Lagos",
         currentState: "Lagos",
         isMobilized: true,

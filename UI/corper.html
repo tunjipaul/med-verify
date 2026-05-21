@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Account Activation | NYSC Medical Relocation Portal</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary": "#4e5e74",
+                        "secondary": "#465f88",
+                        "secondary-fixed-dim": "#aec7f6",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-container": "#008751",
+                        "primary": "#006b3f",
+                        "on-secondary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "tertiary-fixed-dim": "#b7c8e1",
+                        "surface-container-low": "#f2f4f6",
+                        "on-background": "#191c1e",
+                        "on-surface": "#191c1e",
+                        "on-tertiary-container": "#fffeff",
+                        "error-container": "#ffdad6",
+                        "outline-variant": "#bdcabe",
+                        "on-primary-fixed": "#002110",
+                        "primary-fixed": "#8df8b7",
+                        "inverse-surface": "#2d3133",
+                        "on-tertiary-fixed-variant": "#38485d",
+                        "inverse-primary": "#70db9d",
+                        "on-secondary-fixed": "#001b3d",
+                        "surface": "#f7f9fb",
+                        "outline": "#6e7a70",
+                        "error": "#ba1a1a",
+                        "tertiary-container": "#67778e",
+                        "surface-tint": "#006d40",
+                        "surface-dim": "#d8dadc",
+                        "primary-fixed-dim": "#70db9d",
+                        "secondary-container": "#b6d0ff",
+                        "on-tertiary-fixed": "#0b1c30",
+                        "on-primary": "#ffffff",
+                        "on-secondary-fixed-variant": "#2d476f",
+                        "surface-variant": "#e0e3e5",
+                        "surface-container-high": "#e6e8ea",
+                        "on-primary-fixed-variant": "#00522f",
+                        "tertiary-fixed": "#d3e4fe",
+                        "inverse-on-surface": "#eff1f3",
+                        "on-secondary-container": "#3f5881",
+                        "on-surface-variant": "#3e4a41",
+                        "on-tertiary": "#ffffff",
+                        "secondary-fixed": "#d6e3ff",
+                        "on-error-container": "#93000a",
+                        "on-primary-container": "#fdfff9",
+                        "background": "#f7f9fb",
+                        "surface-container": "#eceef0",
+                        "surface-container-highest": "#e0e3e5",
+                        "surface-bright": "#f7f9fb"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "container-max": "1280px",
+                        "margin-mobile": "16px",
+                        "margin-desktop": "40px",
+                        "base": "8px",
+                        "gutter": "24px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "label-bold": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-xl": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "body-base": ["Inter"],
+                        "body-sm": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["28px", {"lineHeight": "36px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                        "label-bold": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "headline-xl": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "body-base": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f9fb;
+        }
+        .activation-card {
+            box-shadow: 0px 2px 4px rgba(0,0,0,0.05);
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface min-h-screen flex flex-col">
+<!-- Top Navigation Suppression: Not rendered for transactional activation flow -->
+<main class="flex-grow flex items-center justify-center px-margin-mobile py-gutter">
+<div class="max-w-md w-full">
+<!-- Branding Header -->
+<div class="text-center mb-base">
+<div class="flex justify-center mb-gutter">
+<div class="w-20 h-20 bg-white rounded-full flex items-center justify-center p-2 activation-card border border-outline-variant">
+<img alt="NYSC Seal" class="w-16 h-16 object-contain" data-alt="A professional and dignified graphic of the Nigerian National Youth Service Corps emblem, featuring the traditional circular seal in vibrant Nigerian green and gold. The logo is displayed with high-definition clarity on a clean, ivory-white background with professional studio lighting that emphasizes its authoritative and governmental status. The overall aesthetic is clean, corporate, and evokes a sense of national pride and administrative reliability." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBhn-agvztRHgueemZ035SWCJxujxzJC_L8p4LUNvmOc9rGjt76wRLApn-UlVupt5pgTwydJYlJ7aXJA3I160a4u5CPHaiFOLDVoL8n6Ue3T53PNs71Rw0PKXJEaF-64G_a7NNpfvKJw5eyzq8rGGsO7QWPcifeh6F3T846PAbeBGH4lAht-_64oa_iefHH-3weroD1cUk6D1tNC1TGGUlT1vovyp5f-OgtjlKq8P_aOyeOKdt2NAIeIf4yH3c0ZWSmuNeftC3PyamF"/>
+</div>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface mb-2">Portal Activation</h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant max-w-[320px] mx-auto">
+                    Verify your identity to access the Medical Relocation application unit.
+                </p>
+</div>
+<!-- Activation Form Card -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-8 activation-card">
+<form class="space-y-gutter" id="activationForm">
+<!-- Call-Up Number -->
+<div class="flex flex-col gap-2">
+<label class="font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider" for="callup">
+                            Call-Up Number
+                        </label>
+<div class="relative">
+<input class="w-full bg-surface border border-outline-variant rounded-lg px-4 py-3 text-body-base focus:ring-2 focus:ring-primary focus:border-primary transition-all outline-none" id="callup" name="callup" placeholder="NYSC/ABJ/2023/123456" required="" type="text"/>
+<span class="material-symbols-outlined absolute right-3 top-3 text-outline" data-icon="badge">badge</span>
+</div>
+<p class="text-[11px] text-tertiary-container italic">Located on your Green Card or original Call-up Letter.</p>
+</div>
+<!-- NIN -->
+<div class="flex flex-col gap-2">
+<label class="font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider" for="nin">
+                            National Identification Number (NIN)
+                        </label>
+<div class="relative">
+<input class="w-full bg-surface border border-outline-variant rounded-lg px-4 py-3 text-body-base focus:ring-2 focus:ring-primary focus:border-primary transition-all outline-none" id="nin" maxlength="11" name="nin" placeholder="11-digit number" required="" type="text"/>
+<span class="material-symbols-outlined absolute right-3 top-3 text-outline" data-icon="fingerprint">fingerprint</span>
+</div>
+<p class="text-[11px] text-tertiary-container italic">Enter the 11 digits found on your NIMC slip or ID card.</p>
+</div>
+<!-- OTP Section (Simulated State) -->
+<div class="flex flex-col gap-2">
+<label class="font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider" for="otp">
+                            One-Time Password (OTP)
+                        </label>
+<div class="flex gap-2">
+<input class="flex-1 bg-surface border border-outline-variant rounded-lg px-4 py-3 text-body-base focus:ring-2 focus:ring-primary focus:border-primary transition-all outline-none" id="otp" maxlength="6" name="otp" placeholder="6-digit code" required="" type="text"/>
+<button class="px-4 py-2 border border-secondary text-secondary font-label-bold text-label-bold rounded-lg hover:bg-secondary-container transition-colors" type="button">
+                                Resend
+                            </button>
+</div>
+<p class="text-[11px] text-tertiary-container italic">Sent to your registered phone number via SMS.</p>
+</div>
+<!-- Security Notice -->
+<div class="bg-surface-container-low p-4 rounded flex gap-3 border-l-4 border-primary">
+<span class="material-symbols-outlined text-primary text-[20px]" data-icon="verified_user">verified_user</span>
+<p class="font-body-sm text-[12px] text-on-surface-variant leading-relaxed">
+<strong>Official Verification:</strong> This portal is a secure government terminal. By clicking verify, you authorize the cross-referencing of your biometric data with NIMC records.
+                        </p>
+</div>
+<!-- Action Button -->
+<button class="w-full bg-primary text-on-primary py-4 rounded-lg font-headline-md text-headline-md hover:bg-primary-container transition-all active:scale-[0.98] flex items-center justify-center gap-2" type="submit">
+<span>Verify &amp; Activate Account</span>
+<span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</form>
+</div>
+<!-- Footer Links -->
+<div class="mt-8 text-center space-y-4">
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                    Need help? <a class="text-primary font-bold hover:underline" href="#">Contact Medical Support Unit</a>
+</p>
+<div class="flex justify-center gap-6">
+<a class="text-[11px] text-outline font-label-bold uppercase hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="text-[11px] text-outline font-label-bold uppercase hover:text-primary transition-colors" href="#">Terms of Service</a>
+</div>
+</div>
+</div>
+</main>
+<!-- Background Pattern Decoration -->
+<div aria-hidden="true" class="fixed inset-0 pointer-events-none -z-10 opacity-[0.03]">
+<svg height="100%" width="100%" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<pattern height="40" id="grid" patternunits="userSpaceOnUse" width="40">
+<path d="M 40 0 L 0 0 0 40" fill="none" stroke="currentColor" stroke-width="1"></path>
+</pattern>
+</defs>
+<rect fill="url(#grid)" height="100%" width="100%"></rect>
+</svg>
+</div>
+<script>
+        // Micro-interactions and input masking
+        document.getElementById('nin').addEventListener('input', function (e) {
+            this.value = this.value.replace(/[^0-9]/g, '');
+        });
+
+        document.getElementById('otp').addEventListener('input', function (e) {
+            this.value = this.value.replace(/[^0-9]/g, '');
+        });
+
+        document.getElementById('callup').addEventListener('input', function (e) {
+            this.value = this.value.toUpperCase();
+        });
+
+        const form = document.getElementById('activationForm');
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button[type="submit"]');
+            const originalContent = btn.innerHTML;
+            
+            btn.disabled = true;
+            btn.innerHTML = `<span class="material-symbols-outlined animate-spin" data-icon="progress_activity">progress_activity</span> Authenticating...`;
+            
+            // Simulate API verification
+            setTimeout(() => {
+                btn.classList.replace('bg-primary', 'bg-secondary');
+                btn.innerHTML = `<span class="material-symbols-outlined" data-icon="check_circle">check_circle</span> Verification Complete`;
+                setTimeout(() => {
+                    alert('Identity Verified Successfully. Redirecting to Dashboard...');
+                    // In a real app, window.location.href = '/dashboard';
+                }, 1000);
+            }, 2000);
+        });
+    </script>
+</body></html>

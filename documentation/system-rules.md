@@ -315,3 +315,12 @@ Versioning:
 
 Current version:
 v1.0
+
+## 11) Global Conditional Access Rule (Mandatory)
+
+Conditional access is a non-negotiable system behavior:
+- Specific modules, workflows, and administrative actions must remain inaccessible
+  until prerequisite actions, validations, or approval states are completed.
+- Prerequisite completion must be performed by authorized actors in the defined workflow chain.
+- UI visibility alone is not sufficient; backend authorization and state validation must enforce this rule.
+- Any endpoint that depends on prior workflow states must return a deterministic 4xx error when prerequisites are unmet.

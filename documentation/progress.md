@@ -1,6 +1,6 @@
 # MedVerify Project Progress
 
-Last Updated: 2026-05-16
+Last Updated: 2026-05-17
 Owner: Engineering (shared context file for all LLM/human contributors)
 
 ## Purpose
@@ -117,6 +117,7 @@ Pending:
 ## Current Focus
 - Execute backend production sign-off checklist in target environment and capture evidence.
 - Resolve `pg` deprecation warning from concurrent `client.query()` usage before `pg@9`.
+- Enforce conditional access gating across backend/frontend workflow surfaces.
 - Keep this file updated at each major engineering change.
 
 ## Active Technical Tasks
@@ -125,6 +126,11 @@ Pending:
 | Resolve `pg` deprecation warning (`client.query()` while client is already executing query) | In Progress | Backend Engineering | 2026-06-26 | `npm test` runs with no `pg` deprecation warnings and query flow is `await`-safe/pooled correctly. |
 
 ## Update Log
+### 2026-05-17
+- Added a mandatory conditional access requirement to project memory:
+- Modules, workflows, and administrative actions must remain inaccessible until prerequisite actions, validations, or approval states are completed by authorized actors in the workflow chain.
+- Registered this as an active engineering constraint for backend and frontend implementation.
+
 ### 2026-05-16
 - Created `progress.md` as shared continuity document for human + LLM contributors.
 - Added end-to-end technical flow, milestone tracker, workstream status, and risk register.

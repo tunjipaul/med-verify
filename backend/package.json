@@ -10,6 +10,8 @@
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:seed": "node prisma/seed.js",
+    "prisma:seed:lagos": "node prisma/seed-lagos-corpers.js",
+    "export:lagos-corpers": "node prisma/export-lagos-corpers.js",
     "test": "vitest run",
     "test:watch": "vitest"
   },

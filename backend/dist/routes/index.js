@@ -11,6 +11,7 @@ const auth_routes_1 = __importDefault(require("./auth.routes"));
 const decisions_routes_1 = __importDefault(require("./decisions.routes"));
 const mct_cases_routes_1 = __importDefault(require("./mct-cases.routes"));
 const verification_codes_routes_1 = __importDefault(require("./verification-codes.routes"));
+const corper_activation_routes_1 = __importDefault(require("./corper-activation.routes"));
 const auth_middleware_1 = require("../middleware/auth.middleware");
 const prisma_1 = require("../lib/prisma");
 const redis_1 = require("../lib/redis");
@@ -21,6 +22,7 @@ router.use("/audit", audit_routes_1.default);
 router.use("/decisions", decisions_routes_1.default);
 router.use("/mct-cases", mct_cases_routes_1.default);
 router.use("/verification-codes", verification_codes_routes_1.default);
+router.use("/corper/activation", corper_activation_routes_1.default);
 router.get("/health", (_req, res) => {
     res.status(200).json({
         success: true,

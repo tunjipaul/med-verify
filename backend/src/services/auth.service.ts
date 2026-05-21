@@ -144,6 +144,19 @@ export async function loginUser(input: LoginInput, ip: string) {
   }
   await clearLoginFailCount(normalizedEmail, ip);
 
+  return issueAuthSessionForUser(user);
+}
+
+export async function issueAuthSessionForUser(
+  user: {
+    id: string;
+    email: string;
+    role: Role;
+    firstName?: string | null;
+    lastName?: string | null;
+  },
+  audit?: { email?: string; channel?: string },
+) {
   const token = signAccessToken(user);
   const refreshToken = signRefreshToken(user);
   const decoded = jwt.decode(refreshToken) as RefreshTokenPayload | null;
@@ -155,7 +168,10 @@ export async function loginUser(input: LoginInput, ip: string) {
     eventType: EventType.LOGIN_SUCCESS,
     actorId: user.id,
     actorRole: user.role,
-    payloadSummary: { email: user.email },
+    payloadSummary: {
+      email: audit?.email ?? user.email,
+      ...(audit?.channel ? { channel: audit.channel } : {}),
+    },
   });
 
   return {

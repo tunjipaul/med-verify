@@ -14,6 +14,7 @@ const validatedEnv = (0, envalid_1.cleanEnv)(process.env, {
     ALLOWED_ORIGINS: (0, envalid_1.str)({ default: "http://localhost:3000,http://localhost:5173" }),
     VERIFICATION_CODE_SECRET: (0, envalid_1.str)(),
     ALLOW_TEST_CODE_PLAINTEXT: (0, envalid_1.bool)({ default: false }),
+    ALLOW_DEV_OTP_PLAINTEXT: (0, envalid_1.bool)({ default: false }),
 });
 if (validatedEnv.NODE_ENV === "production") {
     if (validatedEnv.JWT_SECRET.length < 24) {
@@ -28,6 +29,9 @@ if (validatedEnv.NODE_ENV === "production") {
     const origins = validatedEnv.ALLOWED_ORIGINS.split(",").map((v) => v.trim());
     if (origins.some((origin) => origin.includes("localhost") || origin.includes("127.0.0.1"))) {
         throw new Error("ALLOWED_ORIGINS contains localhost values in production.");
+    }
+    if (validatedEnv.ALLOW_DEV_OTP_PLAINTEXT) {
+        throw new Error("ALLOW_DEV_OTP_PLAINTEXT must be false in production.");
     }
 }
 if (validatedEnv.REFRESH_JWT_SECRET === validatedEnv.JWT_SECRET) {

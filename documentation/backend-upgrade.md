@@ -205,6 +205,7 @@ Status: Not Started
 - Every mutating endpoint must be idempotent or explicitly justified.
 - Every production change must support rollback.
 - Every critical service must emit golden-signal telemetry.
+- Conditional access model is mandatory: specific modules, workflows, and administrative actions must remain inaccessible until prerequisite actions, validations, or approval states are completed by authorized actors in the workflow chain.
 
 ## Suggested Work Breakdown (Execution Order)
 1. SLO contract + topology decisions

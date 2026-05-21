@@ -36,10 +36,12 @@ describe("Verification codes integration", () => {
         lastName: "SuiteCorper",
       },
     });
+    const suiteNinSuffix = String(Date.now()).padStart(10, "0").slice(-10);
     await prisma.corper.create({
       data: {
         userId: suiteUser.id,
         callUpNumber: `NYSC-VERIFY-${Date.now()}`,
+        nin: `9${suiteNinSuffix}`,
         postedState: "FCT",
         currentState: "FCT",
         isMobilized: true,

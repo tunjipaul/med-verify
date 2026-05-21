@@ -6,6 +6,7 @@ import authRouter from "./auth.routes";
 import decisionsRouter from "./decisions.routes";
 import mctCasesRouter from "./mct-cases.routes";
 import verificationCodesRouter from "./verification-codes.routes";
+import corperActivationRouter from "./corper-activation.routes";
 import { authenticate, requireRoles } from "../middleware/auth.middleware";
 import { prisma } from "../lib/prisma";
 import { redis } from "../lib/redis";
@@ -18,6 +19,7 @@ router.use("/audit", auditRouter);
 router.use("/decisions", decisionsRouter);
 router.use("/mct-cases", mctCasesRouter);
 router.use("/verification-codes", verificationCodesRouter);
+router.use("/corper/activation", corperActivationRouter);
 
 router.get("/health", (_req, res) => {
   res.status(200).json({

@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.loginUser = loginUser;
+exports.issueAuthSessionForUser = issueAuthSessionForUser;
 exports.refreshAccessToken = refreshAccessToken;
 exports.logoutUser = logoutUser;
 const client_1 = require("@prisma/client");
@@ -106,6 +107,9 @@ async function loginUser(input, ip) {
         throw new app_error_1.AppError("Invalid credentials", 401, "AUTH_INVALID_CREDENTIALS");
     }
     await clearLoginFailCount(normalizedEmail, ip);
+    return issueAuthSessionForUser(user);
+}
+async function issueAuthSessionForUser(user, audit) {
     const token = signAccessToken(user);
     const refreshToken = signRefreshToken(user);
     const decoded = jsonwebtoken_1.default.decode(refreshToken);
@@ -117,7 +121,10 @@ async function loginUser(input, ip) {
         eventType: client_1.EventType.LOGIN_SUCCESS,
         actorId: user.id,
         actorRole: user.role,
-        payloadSummary: { email: user.email },
+        payloadSummary: {
+            email: audit?.email ?? user.email,
+            ...(audit?.channel ? { channel: audit.channel } : {}),
+        },
     });
     return {
         token,

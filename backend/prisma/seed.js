@@ -90,6 +90,7 @@ async function main() {
     where: { userId: corperUser.id },
     update: {
       callUpNumber: "NYSC-2026-00001",
+      nin: "10000000001",
       postedState: "Kano",
       currentState: "Kano",
       isMobilized: true,
@@ -98,6 +99,7 @@ async function main() {
     create: {
       userId: corperUser.id,
       callUpNumber: "NYSC-2026-00001",
+      nin: "10000000001",
       postedState: "Kano",
       currentState: "Kano",
       isMobilized: true,

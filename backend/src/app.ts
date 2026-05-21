@@ -14,6 +14,18 @@ const allowedOrigins = env.ALLOWED_ORIGINS.split(",")
   .map((item) => item.trim())
   .filter(Boolean);
 
+const localDevOriginPattern = /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/;
+
+function isOriginAllowed(origin: string): boolean {
+  if (allowedOrigins.includes(origin)) {
+    return true;
+  }
+  if (env.NODE_ENV !== "production" && localDevOriginPattern.test(origin)) {
+    return true;
+  }
+  return false;
+}
+
 app.use(helmet());
 app.use(attachRequestId);
 app.use(
@@ -27,7 +39,7 @@ app.use(
         callback(null, true);
         return;
       }
-      if (allowedOrigins.includes(origin)) {
+      if (isOriginAllowed(origin)) {
         callback(null, true);
         return;
       }

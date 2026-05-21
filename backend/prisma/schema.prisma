@@ -81,7 +81,7 @@ model Corper {
   id             String   @id @default(uuid())
   userId         String   @unique
   callUpNumber   String   @unique
-  nin            String?  @unique
+  nin            String   @unique
   bvn            String?  @unique
   phone          String?
   postedState    String?
