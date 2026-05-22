@@ -46,7 +46,7 @@ Definition of done for current phase:
 * public entry layer pages exist and match trust/government tone
 * no role sees unauthorized internal intelligence fields in UI
 
-â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+
 
 ──────────────────────────────────────────────
 
