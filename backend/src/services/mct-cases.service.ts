@@ -27,6 +27,12 @@ type TransitionInput = {
   };
 };
 
+/** Corper-facing MCT payload — no risk, referral, or internal identity-match signals. */
+export function toCorperMctCaseView<T extends Record<string, unknown>>(caseRow: T): Omit<T, "riskScore" | "referralTag" | "identityMatch"> {
+  const { riskScore: _riskScore, referralTag: _referralTag, identityMatch: _identityMatch, ...safe } = caseRow;
+  return safe;
+}
+
 function isPrivilegedRole(role: Role): boolean {
   return (
     role === Role.COORDINATOR ||
@@ -183,7 +189,7 @@ export async function listMctCases(input: ListMctCasesInput) {
       prisma.mctCase.findMany({ where, ...pagination }),
       prisma.mctCase.count({ where }),
     ]);
-    return { items, total };
+    return { items: items.map((row) => toCorperMctCaseView(row)), total };
   }
 
   if (input.role === Role.DOCTOR) {
@@ -245,7 +251,7 @@ export async function getMctCaseById(caseId: string, role: Role, userId: string)
   }
 
   if (role === Role.CORPER && mctCase.corper.userId === userId) {
-    return mctCase;
+    return toCorperMctCaseView(mctCase);
   }
 
   if (role === Role.DOCTOR && mctCase.doctor?.userId === userId) {

@@ -47,6 +47,8 @@ curl http://localhost:5000/api/v1/ready
 
 ## Environment (`.env`)
 
+**Sharing with colleagues:** commit and share **`backend/.env.example`** only. Each person runs `cp .env.example .env` and fills in values (use a team password manager for secrets). Never commit `backend/.env`.
+
 1. Copy `.env.example` to `.env`.
 2. Set these values:
 
@@ -58,7 +60,8 @@ curl http://localhost:5000/api/v1/ready
 | `REFRESH_JWT_SECRET` | Refresh token signing (**must differ** from `JWT_SECRET`) |
 | `VERIFICATION_CODE_SECRET` | HMAC for verification codes / activation OTP |
 | `ALLOWED_ORIGINS` | Comma-separated frontend URLs (include your Vite port, e.g. `http://localhost:5173`, `http://localhost:5174`) |
-| `ALLOW_DEV_OTP_PLAINTEXT` | `true` locally to show activation OTP in API + console (**never** in production) |
+| `ALLOW_DEV_OTP_PLAINTEXT` | `true` locally to show activation OTP in API + console (**never** in production) — template defaults to `true` |
+| `REDIS_URL` | `redis://127.0.0.1:6379` for local Redis, or `rediss://…` for Upstash |
 
 Optional:
 
@@ -90,7 +93,7 @@ npm run prisma:seed:lagos
 
 ### Lagos bulk corpers (dev/staging)
 
-Pre-provisions mobilized corpers before portal activation.
+Pre-provisions mobilized corpers before portal activation. Each mobilized corper also receives **one SYSTEM MCT** (`CREATED`), matching production mobilization — so the corper dashboard shows a case after seed.
 
 | Variable | Default | Description |
 |----------|---------|-------------|
@@ -246,6 +249,7 @@ Password for all seeded staff users: **`Password123!`**
 | CORS errors from frontend | Add your Vite origin to `ALLOWED_ORIGINS` (e.g. `http://localhost:5174`) |
 | Redis connection failed | Check `REDIS_URL`; `/api/v1/ready` will fail until Redis is up |
 | Activation OTP not shown | Set `ALLOW_DEV_OTP_PLAINTEXT=true` and restart backend |
+| Dashboard shows no case for Lagos user | Run `npm run prisma:seed:lagos` (adds SYSTEM MCT per corper) |
 
 ---
 

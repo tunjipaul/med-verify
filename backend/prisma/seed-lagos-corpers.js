@@ -12,7 +12,7 @@ require("dotenv/config");
 const fs = require("fs");
 const path = require("path");
 const bcrypt = require("bcrypt");
-const { PrismaClient, Role } = require("@prisma/client");
+const { PrismaClient, Role, MctStatus, EventType } = require("@prisma/client");
 const { PrismaPg } = require("@prisma/adapter-pg");
 const { Pool } = require("pg");
 const {
@@ -71,6 +71,39 @@ async function purgeLagosCorpers() {
   console.log(`Purged ${lagosCorpers.length} Lagos bulk corper(s) and related rows.`);
 }
 
+/** One CREATED MCT per mobilized corper — same as NYSC SYSTEM mobilization provisioning. */
+async function ensureSystemMctForCorper(corperId) {
+  const active = await prisma.mctCase.findFirst({
+    where: {
+      corperId,
+      deletedAt: null,
+      status: { notIn: [MctStatus.APPROVED, MctStatus.REJECTED, MctStatus.CLOSED] },
+    },
+    select: { id: true },
+  });
+  if (active) {
+    return active.id;
+  }
+
+  const created = await prisma.mctCase.create({
+    data: {
+      corperId,
+      status: MctStatus.CREATED,
+    },
+  });
+
+  await prisma.auditLog.create({
+    data: {
+      eventType: EventType.MCT_CREATED,
+      actorRole: Role.SYSTEM,
+      mctCaseId: created.id,
+      payloadSummary: { source: "lagos_mobilization_seed" },
+    },
+  });
+
+  return created.id;
+}
+
 async function upsertCorperRecord(record) {
   const user = await prisma.user.upsert({
     where: { email: record.email },
@@ -92,7 +125,7 @@ async function upsertCorperRecord(record) {
     },
   });
 
-  await prisma.corper.upsert({
+  const corper = await prisma.corper.upsert({
     where: { callUpNumber: record.callUpNumber },
     update: {
       userId: user.id,
@@ -113,6 +146,10 @@ async function upsertCorperRecord(record) {
       isMobilized: record.isMobilized,
     },
   });
+
+  if (record.isMobilized) {
+    await ensureSystemMctForCorper(corper.id);
+  }
 }
 
 async function seedBatch(records) {
@@ -149,6 +186,7 @@ function writeManifest({ count, year, durationMs, records }) {
     notes: [
       "Dev/staging only. Do not run in production.",
       "Corpers are pre-provisioned; portal activation should lookup by callUpNumber.",
+      "Each mobilized corper gets one SYSTEM MCT (status CREATED) — mirrors NYSC mobilization.",
       "UI may show NYSC/LAG/2026/000001 — normalize to NYSC-LAG-2026-000001 on the API.",
     ],
   };
