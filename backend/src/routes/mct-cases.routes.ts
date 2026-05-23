@@ -1,13 +1,12 @@
 import { Role } from "@prisma/client";
 import { Router } from "express";
-import { createCase, getCaseById, listCases, transitionCaseStatus } from "../controllers/mct-cases.controller";
+import { getCaseById, listCases, transitionCaseStatus } from "../controllers/mct-cases.controller";
 import { authenticate, requireRoles } from "../middleware/auth.middleware";
 import { generateCodeForCase } from "../controllers/verification-codes.controller";
 
 const mctCasesRouter = Router();
 
 mctCasesRouter.use(authenticate);
-mctCasesRouter.post("/", createCase);
 mctCasesRouter.get("/", listCases);
 mctCasesRouter.get("/:id", getCaseById);
 mctCasesRouter.patch("/:id/status", transitionCaseStatus);

@@ -3,6 +3,7 @@ import request from "supertest";
 import { beforeAll, describe, expect, it } from "vitest";
 import app from "../src/app";
 import { prisma } from "../src/lib/prisma";
+import { closeActiveMctCasesForCorperUser, getCorperUserIdByEmail, provisionTestMctCase } from "./helpers/mct-case";
 
 async function login(email: string): Promise<string> {
   const response = await request(app).post("/api/v1/auth/login").send({
@@ -37,32 +38,17 @@ describe("Decisions integration", () => {
     });
     if (!hospital || !doctor) throw new Error("Seeded hospital/doctor not found");
 
-    const seededCorper = await prisma.corper.findFirst({
-      where: { user: { email: "corper@medverify.local" } },
-      select: { id: true },
-    });
-    if (seededCorper) {
-      await prisma.mctCase.updateMany({
-        where: {
-          corperId: seededCorper.id,
-          deletedAt: null,
-          status: { notIn: ["APPROVED", "REJECTED", "CLOSED"] },
-        },
-        data: { status: "CLOSED", closedAt: new Date() },
-      });
-    }
+    const corperUserId = await getCorperUserIdByEmail("corper@medverify.local");
+    await closeActiveMctCasesForCorperUser(corperUserId);
 
-    const created = await request(app)
-      .post("/api/v1/mct-cases")
-      .set("Authorization", `Bearer ${corperToken}`)
-      .send({
-        hospitalId: hospital.id,
-        doctorId: doctor.id,
-        identityMatch: `decision-case-${Date.now()}`,
-        referralTag: true,
-      });
-    expect(created.status).toBe(201);
-    caseId = created.body.data.id as string;
+    const created = await provisionTestMctCase({
+      corperUserId,
+      hospitalId: hospital.id,
+      doctorId: doctor.id,
+      identityMatch: `decision-case-${Date.now()}`,
+      referralTag: true,
+    });
+    caseId = created.id;
   });
 
   it("blocks doctor from generating draft decision", async () => {

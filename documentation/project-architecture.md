@@ -514,7 +514,7 @@ flowchart TB
 |------------|---------|----------|----------|-------|
 | Corper OTP activation | ✅ | ✅ | — | Dev OTP panel |
 | Staff auth | ✅ | ❌ | — | |
-| MCT lifecycle API | ✅ | Partial | — | Corper create in API ≠ policy; UI has “open case” — **revert** |
+| MCT lifecycle API | ✅ | Partial | — | Corpers cannot create cases (SYSTEM only); list + validate code wired |
 | Verification code validate | ✅ | ✅ dialog | — | MV- format |
 | Doctor report UI | ❌ | ❌ | — | |
 | Hospital portal | Partial admin API | ❌ | — | |

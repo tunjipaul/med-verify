@@ -1,15 +1,8 @@
-import { MctStatus, Role } from "@prisma/client";
+import { MctStatus } from "@prisma/client";
 import type { Request, Response } from "express";
 import { z } from "zod";
-import { createMctCase, getMctCaseById, listMctCases, transitionMctCaseStatus } from "../services/mct-cases.service";
+import { getMctCaseById, listMctCases, transitionMctCaseStatus } from "../services/mct-cases.service";
 import { AppError } from "../utils/app-error";
-
-const createCaseSchema = z.object({
-  hospitalId: z.string().uuid().optional(),
-  doctorId: z.string().uuid().optional(),
-  referralTag: z.boolean().optional(),
-  identityMatch: z.string().max(120).optional(),
-});
 
 const caseIdSchema = z.object({
   id: z.string().uuid(),
@@ -24,28 +17,6 @@ const listQuerySchema = z.object({
   page: z.coerce.number().int().min(1).default(1),
   limit: z.coerce.number().int().min(1).max(100).default(20),
 });
-
-export async function createCase(req: Request, res: Response): Promise<void> {
-  if (!req.user) {
-    throw new AppError("Unauthorized", 401, "UNAUTHORIZED");
-  }
-
-  if (req.user.role !== Role.CORPER) {
-    throw new AppError("Only corpers can create MCT cases", 403, "FORBIDDEN");
-  }
-
-  const payload = createCaseSchema.parse(req.body);
-  const created = await createMctCase({
-    corperUserId: req.user.id,
-    ...payload,
-  });
-
-  res.status(201).json({
-    success: true,
-    message: "MCT case created",
-    data: created,
-  });
-}
 
 export async function listCases(req: Request, res: Response): Promise<void> {
   if (!req.user) {

@@ -150,10 +150,10 @@ export async function createMctCase(input: CreateMctCaseInput) {
   await prisma.auditLog.create({
     data: {
       eventType: EventType.MCT_CREATED,
-      actorId: input.corperUserId,
-      actorRole: Role.CORPER,
+      actorRole: Role.SYSTEM,
       mctCaseId: created.id,
       payloadSummary: {
+        corperUserId: input.corperUserId,
         hospitalId: input.hospitalId ?? null,
         doctorId: input.doctorId ?? null,
         referralTag: input.referralTag ?? false,

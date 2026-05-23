@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   Activity,
   Bell,
@@ -7,7 +7,6 @@ import {
   CircleHelp,
   FileKey2,
   LogOut,
-  Plus,
   ShieldCheck,
   Upload,
 } from "lucide-react";
@@ -23,7 +22,7 @@ import {
   getStatusLabel,
   getStatusTone,
 } from "../lib/corper-dashboard";
-import { createCorperMctCase, listCorperMctCases, pickActiveCase, type MctStatus } from "../lib/mct";
+import { listCorperMctCases, pickActiveCase, type MctStatus } from "../lib/mct";
 import { useAuthStore } from "../store/auth.store";
 
 function statusChipClass(tone: ReturnType<typeof getStatusTone>): string {
@@ -62,32 +61,9 @@ export default function DashboardPage() {
   const workflowSteps = useMemo(() => buildWorkflowSteps(activeCase), [activeCase]);
   const displayName = user ? displayCorperName(user) : "Corper";
 
-  const createCaseMutation = useMutation({
-    mutationFn: () => createCorperMctCase({ identityMatch: "EXACT" }),
-    onSuccess: (result) => {
-      toast.success(result.message ?? "Medical case opened.");
-      void queryClient.invalidateQueries({ queryKey: ["corper-mct-cases"] });
-    },
-    onError: (error: unknown) => {
-      const message =
-        error && typeof error === "object" && "response" in error
-          ? (error as { response?: { data?: { message?: string } } }).response?.data?.message
-          : undefined;
-      toast.error(message ?? "Could not open a new case.");
-    },
-  });
-
   function handleLogout() {
     clearAuth();
     navigate("/corper/login");
-  }
-
-  function handleNewRequest() {
-    if (activeCase && activeCase.status !== "CLOSED") {
-      toast.info("You already have an active case. Track it below or contact support.");
-      return;
-    }
-    createCaseMutation.mutate();
   }
 
   function scrollToCaseStatus() {
@@ -139,25 +115,14 @@ export default function DashboardPage() {
 
       <main className="mx-auto max-w-[1440px] px-4 py-8 sm:px-8 sm:py-10">
         <section className="mb-8 sm:mb-12">
-          <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-            <div>
-              <h1 className="text-2xl font-semibold tracking-tight text-[#005129] sm:text-3xl">
-                Welcome, {displayName.split(" ")[0]}.
-              </h1>
-              <p className="mt-2 max-w-xl text-sm leading-relaxed text-[#3f4940] sm:text-base">
-                Track your medical relocation case, enter your doctor&apos;s verification code, and follow NYSC
-                review outcomes in one place.
-              </p>
-            </div>
-            <button
-              type="button"
-              onClick={handleNewRequest}
-              disabled={createCaseMutation.isPending}
-              className="inline-flex items-center justify-center gap-2 rounded-full bg-[#005129] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#0b6b3a] disabled:opacity-60"
-            >
-              <Plus className="h-4 w-4" />
-              {createCaseMutation.isPending ? "Opening…" : "Open medical case"}
-            </button>
+          <div>
+            <h1 className="text-2xl font-semibold tracking-tight text-[#005129] sm:text-3xl">
+              Welcome, {displayName.split(" ")[0]}.
+            </h1>
+            <p className="mt-2 max-w-xl text-sm leading-relaxed text-[#3f4940] sm:text-base">
+              Visit an accredited hospital for your medical report, then enter the MCT or verification details your
+              doctor gives you to link your case and track NYSC review outcomes.
+            </p>
           </div>
         </section>
 
@@ -196,8 +161,8 @@ export default function DashboardPage() {
                   </div>
                   <p className="text-sm text-[#3f4940]">
                     {activeCase
-                      ? "One active case per corper. Visit an accredited hospital for your digital report."
-                      : "Open a medical case to begin your relocation verification journey."}
+                      ? "Your case is on record. Complete your hospital visit and enter the token or code from your doctor."
+                      : "No case linked yet. After your hospital visit, enter the MCT reference your doctor provides."}
                   </p>
                 </div>
               </div>
@@ -274,8 +239,8 @@ export default function DashboardPage() {
                 </div>
               ) : (
                 <p className="text-sm text-[#3f4940]">
-                  No medical case yet. Tap <strong>Open medical case</strong> to start. Only one active case is allowed
-                  at a time.
+                  No case is linked to your account yet. Visit an accredited hospital; your doctor will give you an MCT
+                  reference and verification code to enter here.
                 </p>
               )}
             </div>

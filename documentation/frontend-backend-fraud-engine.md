@@ -119,7 +119,7 @@ flowchart TB
 | Validate verification code | `POST` | `/verification-codes/validate` | `lib/mct.ts` |
 | Health (dev) | `GET` | `/health` | — |
 
-**Note:** `POST /mct-cases` exists on backend for corpers today but **conflicts with product policy** (corpers must not create cases). UI should not expose it; removal alignment is planned.
+**Note:** `POST /mct-cases` is **not** exposed on the public API. MCT cases are provisioned by **SYSTEM** (mobilization / batch jobs). Corpers only list cases and validate codes.
 
 ### 5.3 Planned corper endpoints (target)
 

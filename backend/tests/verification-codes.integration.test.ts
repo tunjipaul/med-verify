@@ -4,6 +4,7 @@ import { EventType } from "@prisma/client";
 import bcrypt from "bcrypt";
 import app from "../src/app";
 import { prisma } from "../src/lib/prisma";
+import { provisionTestMctCase } from "./helpers/mct-case";
 
 type AuthSession = { token: string };
 
@@ -62,17 +63,13 @@ describe("Verification codes integration", () => {
     });
     if (!hospital || !doctor) throw new Error("Seeded doctor/hospital missing");
 
-    const created = await request(app)
-      .post("/api/v1/mct-cases")
-      .set("Authorization", `Bearer ${corperToken}`)
-      .send({
-        hospitalId: hospital.id,
-        doctorId: doctor.id,
-        identityMatch: `verify-flow-${Date.now()}`,
-      });
-
-    expect(created.status).toBe(201);
-    caseId = created.body.data.id as string;
+    const created = await provisionTestMctCase({
+      corperUserId: suiteUser.id,
+      hospitalId: hospital.id,
+      doctorId: doctor.id,
+      identityMatch: `verify-flow-${Date.now()}`,
+    });
+    caseId = created.id;
   });
 
   it("generates verification code for assigned doctor", async () => {

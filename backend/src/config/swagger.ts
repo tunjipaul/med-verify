@@ -485,53 +485,6 @@ const openApiSpec = {
       },
     },
     "/mct-cases": {
-      post: {
-        summary: "Create MCT case",
-        description: "Creates a new MCT case. Allowed role: CORPER.",
-        security: [{ bearerAuth: [] }],
-        requestBody: {
-          required: false,
-          content: {
-            "application/json": {
-              schema: { $ref: "#/components/schemas/CreateMctCaseRequest" },
-            },
-          },
-        },
-        responses: {
-          "201": {
-            description: "MCT case created",
-            content: {
-              "application/json": {
-                schema: { $ref: "#/components/schemas/MctCaseResponse" },
-              },
-            },
-          },
-          "401": {
-            description: "Unauthorized",
-            content: {
-              "application/json": {
-                schema: { $ref: "#/components/schemas/ApiError" },
-              },
-            },
-          },
-          "403": {
-            description: "Forbidden",
-            content: {
-              "application/json": {
-                schema: { $ref: "#/components/schemas/ApiError" },
-              },
-            },
-          },
-          "409": {
-            description: "Active case already exists for corper",
-            content: {
-              "application/json": {
-                schema: { $ref: "#/components/schemas/ApiError" },
-              },
-            },
-          },
-        },
-      },
       get: {
         summary: "List MCT cases",
         description:

@@ -4,6 +4,8 @@ import app from "../src/app";
 import { prisma } from "../src/lib/prisma";
 import { EventType } from "@prisma/client";
 import bcrypt from "bcrypt";
+import { createMctCase } from "../src/services/mct-cases.service";
+import { provisionTestMctCase } from "./helpers/mct-case";
 
 type AuthSession = {
   token: string;
@@ -23,10 +25,10 @@ describe("MCT cases integration", () => {
   let doctorId: string;
   let foreignCaseId: string;
   let assignedCaseId: string;
-  let suiteCorperEmail: string;
+  let suiteCorperUserId: string;
 
   beforeAll(async () => {
-    suiteCorperEmail = `mct-suite-corper-${Date.now()}@medverify.local`;
+    const suiteCorperEmail = `mct-suite-corper-${Date.now()}@medverify.local`;
     const passwordHash = await bcrypt.hash("Password123!", 10);
     const suiteUser = await prisma.user.create({
       data: {
@@ -37,6 +39,7 @@ describe("MCT cases integration", () => {
         lastName: "SuiteCorper",
       },
     });
+    suiteCorperUserId = suiteUser.id;
     const suiteNinSuffix = String(Date.now()).padStart(10, "0").slice(-10);
     await prisma.corper.create({
       data: {
@@ -99,28 +102,31 @@ describe("MCT cases integration", () => {
       },
     });
     foreignCaseId = foreignCase.id;
+
+    const assigned = await provisionTestMctCase({
+      corperUserId: suiteCorperUserId,
+      hospitalId,
+      doctorId,
+      identityMatch: `corper-case-${Date.now()}`,
+      referralTag: true,
+    });
+    assignedCaseId = assigned.id;
   });
 
-  it("allows CORPER to create doctor-assigned MCT case", async () => {
+  it("blocks CORPER from creating MCT case via HTTP", async () => {
     const response = await request(app)
       .post("/api/v1/mct-cases")
       .set("Authorization", `Bearer ${corperAuth.token}`)
       .send({
         hospitalId,
         doctorId,
-        identityMatch: `corper-case-${Date.now()}`,
-        referralTag: true,
+        identityMatch: "corper-should-not-create",
       });
 
-    expect(response.status).toBe(201);
-    expect(response.body.success).toBe(true);
-    expect(response.body.data.status).toBe("CREATED");
-    assignedCaseId = response.body.data.id as string;
-    expect(typeof assignedCaseId).toBe("string");
-    expect(assignedCaseId.length).toBeGreaterThan(0);
+    expect(response.status).toBe(404);
   });
 
-  it("blocks non-CORPER from creating MCT case", async () => {
+  it("blocks ABUJA_ADMIN from creating MCT case via HTTP", async () => {
     const response = await request(app)
       .post("/api/v1/mct-cases")
       .set("Authorization", `Bearer ${adminAuth.token}`)
@@ -128,21 +134,20 @@ describe("MCT cases integration", () => {
         identityMatch: "admin-should-not-create",
       });
 
-    expect(response.status).toBe(403);
-    expect(response.body.success).toBe(false);
+    expect(response.status).toBe(404);
   });
 
-  it("rejects second active case for same corper", async () => {
-    const response = await request(app)
-      .post("/api/v1/mct-cases")
-      .set("Authorization", `Bearer ${corperAuth.token}`)
-      .send({
+  it("rejects second active case for same corper when provisioned by SYSTEM", async () => {
+    await expect(
+      createMctCase({
+        corperUserId: suiteCorperUserId,
         hospitalId,
         doctorId,
         identityMatch: `duplicate-active-case-${Date.now()}`,
-      });
-
-    expect(response.status).toBeGreaterThanOrEqual(400);
+      }),
+    ).rejects.toMatchObject({
+      statusCode: 409,
+    });
   });
 
   it("returns only doctor-assigned cases for DOCTOR list", async () => {

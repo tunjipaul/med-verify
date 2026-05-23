@@ -38,12 +38,6 @@ type ListMctCasesResponse = {
   };
 };
 
-type CreateMctCaseResponse = {
-  success: boolean;
-  message: string;
-  data: MctCaseSummary;
-};
-
 type ValidateVerificationCodeResponse = {
   success: boolean;
   message: string;
@@ -58,11 +52,6 @@ export async function listCorperMctCases() {
     params: { limit: 10, page: 1 },
   });
   return data.data;
-}
-
-export async function createCorperMctCase(payload?: { identityMatch?: string }) {
-  const { data } = await api.post<CreateMctCaseResponse>("/mct-cases", payload ?? {});
-  return data;
 }
 
 export async function validateVerificationCode(codeValue: string) {
