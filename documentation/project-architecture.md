@@ -545,6 +545,7 @@ flowchart TB
 
 | Document | Focus |
 |----------|-------|
+| `frontend-backend-fraud-engine.md` | **How frontend, backend, and fraud engine talk** (sync HTTP, contracts, sequences) |
 | `system-rules.md` | Permissions, transitions, code rules — **source of truth** |
 | `medverify.md` | Product vision, risk thresholds |
 | `technical-documentation.md` | Stack choices per service |
